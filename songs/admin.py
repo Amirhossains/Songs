@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+
+admin.site.register(Artists)
+admin.site.register(Songs)
+admin.site.register(Playlists)
+admin.site.register(Albums)
+admin.site.register(Users)
+admin.site.register(Playlist_song)
+admin.site.register(Interactions)

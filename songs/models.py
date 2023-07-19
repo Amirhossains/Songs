@@ -1,6 +1,7 @@
 from django.db import models
 
-class artists(models.Model):
+
+class Artists(models.Model):
     name = models.CharField(verbose_name="name", max_length=32)
     image = models.CharField(verbose_name="image", max_length=32, blank=True)
     created_at = models.DateTimeField("created at", auto_now_add=True)
@@ -11,11 +12,15 @@ class artists(models.Model):
         verbose_name = "artist"
         verbose_name_plural = "artists"
 
-class albums(models.Model):
+    def __str__(self):
+        return f'{self.name} {self.image}'
+
+
+class Albums(models.Model):
     artist = models.ForeignKey(to="artists", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="name", max_length=20)
     cover = models.CharField(verbose_name="cover", max_length=32)
-    craeted_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
+    created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
 
     class Meta:
@@ -23,8 +28,11 @@ class albums(models.Model):
         verbose_name = "album"
         verbose_name_plural = "albums"
 
-class songs(models.Model):
-    # id = models.CharField(primary_key=True, max_length=32)
+    def __str__(self):
+        return f'{self.artist} {self.name}'
+
+
+class Songs(models.Model):
     album = models.ForeignKey(to="albums", on_delete=models.CASCADE)
     artist = models.ForeignKey(to="artists", on_delete=models.CASCADE)
     title = models.CharField(verbose_name="title", max_length=20)
@@ -42,7 +50,11 @@ class songs(models.Model):
         verbose_name = "song"
         verbose_name_plural = "songs"
 
-class users(models.Model):
+    def __str__(self):
+        return f'{self.album} {self.artist} {self.title}'
+
+
+class Users(models.Model):
     name = models.CharField(verbose_name="Name", max_length=15)
     email = models.CharField(verbose_name="Email", max_length=30)
     password = models.CharField(verbose_name="password", max_length=20)
@@ -57,7 +69,11 @@ class users(models.Model):
         verbose_name = "user"
         verbose_name_plural = "users"
 
-class playlists(models.Model):
+    def __str__(self):
+        return f'{self.name} {self.email}'
+
+
+class Playlists(models.Model):
     user = models.ForeignKey(to="users", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="name", max_length=15)
     rules = models.TextField(verbose_name="rules", blank=True)
@@ -69,7 +85,11 @@ class playlists(models.Model):
         verbose_name = "playlist"
         verbose_name_plural = "playlists"
 
-class playlist_song(models.Model):
+    def __str__(self):
+        return f'{self.user} {self.name}'
+
+
+class Playlist_song(models.Model):
     playlist = models.ForeignKey(to="playlists", on_delete=models.CASCADE)
     song = models.ForeignKey(to="songs", on_delete=models.CASCADE)
 
@@ -78,8 +98,11 @@ class playlist_song(models.Model):
         verbose_name = "playlist_song"
         verbose_name_plural = "playlist_songs"
 
-class intractions(models.Model):
-    # id = models.BigIntegerField("id", primary_key=True)
+    def __str__(self):
+        return f'{self.playlist} {self.song}'
+
+
+class Interactions(models.Model):
     user = models.ForeignKey(to="users", on_delete=models.CASCADE)
     song = models.ForeignKey(to="songs", on_delete=models.CASCADE)
     liked = models.BooleanField(verbose_name="liked", default=False)
@@ -88,6 +111,9 @@ class intractions(models.Model):
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
 
     class Meta:
-        db_table = "intractions"
+        db_table = "interactions"
         verbose_name = "interaction"
-        verbose_name_plural = "intractions"
+        verbose_name_plural = "interactions"
+
+    def __str__(self):
+        return f'{self.user} {self.song} {self.liked} {self.play_count}'
