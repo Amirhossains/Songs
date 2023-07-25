@@ -1,25 +1,29 @@
 from django.forms import model_to_dict
 from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-from .models import Artists, Albums, Songs, Users, Playlists, Playlist_song, Interactions
+from models import Artists, Albums, Songs, Users, Playlists, Interactions
 
 
+@api_view(["GET", "POST"])
 def artists_list_view(request):
     artists_list = []
     qs = Artists.objects.all()
     for i in qs:
         artists = {"id": i.id, "name": i.name}
         artists_list.append(artists)
-    return JsonResponse({"artists": artists_list})
+    return Response({"artists": artists_list})
 
 
+@api_view(["GET"])
 def artist_detail_view(request, pk):
     try:
         qs = Artists.objects.get(pk=pk)
     except Artists.DoesNotExist:
         return JsonResponse({"detail": "404 error"})
     artist = model_to_dict(qs)
-    return JsonResponse(artist)
+    return Response(artist)
 
 
 def albums_list_view(request):
@@ -93,24 +97,6 @@ def playlist_detail_view(request, pk):
         return JsonResponse({"detail": "404 error"})
     playlist = model_to_dict(qs)
     return JsonResponse(playlist)
-
-
-def playlist_song_list_view(request):
-    playlist_song_list = []
-    qs = Playlist_song.objects.all()
-    for i in qs:
-        playlist_song = model_to_dict(i)
-        playlist_song_list.append(playlist_song)
-    return JsonResponse({"playlist_song": playlist_song_list})
-
-
-def playlist_song_detail_view(request, pk):
-    try:
-        qs = Playlist_song.objects.get(pk=pk)
-    except Playlist_song.DoesNotExist:
-        return JsonResponse({"detail": "404 error"})
-    playlist_song = model_to_dict(qs)
-    return JsonResponse(playlist_song)
 
 
 def interactions_list_view(request):
